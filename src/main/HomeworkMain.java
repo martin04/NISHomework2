@@ -9,6 +9,9 @@ import math.OperationSubstract;
 public class HomeworkMain {
 
 	public static void main(String[] args) {
+		
+		//TODO: create two threads that simulate CONSUMER -> PRODUCER problem
+		
 		MathOperation context = new MathOperation(new OperationAdd());
 		System.out.println("10 + 5 = " + context.doMath(10, 5));
 
