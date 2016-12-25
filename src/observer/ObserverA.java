@@ -1,5 +1,7 @@
 package observer;
 
+import java.util.Map.Entry;
+
 import math.MathOperation;
 import math.OperationAdd;
 import math.OperationDivide;
@@ -8,13 +10,16 @@ import math.OperationSubstract;
 
 public class ObserverA extends Observer {
 
-	public ObserverA(Subject subject) {
+	public ObserverA(Subject subject, String operation, Float number, Integer observerCounter) {
 		this.subject = subject;
-		this.subject.attach(this);
+		this.operation = operation;
+		this.number = number;
+		this.subject.attach(String.valueOf(observerCounter), this);
+		update(operation, number, false);
 	}
 
 	@Override
-	public void update(String operation, float number) {
+	public void update(String operation, float number, boolean isNotifying) {
 		MathOperation context = null;
 		switch (operation) {
 		case "+":
@@ -35,7 +40,12 @@ public class ObserverA extends Observer {
 		}
 
 		if (context != null) {
-			subject.setState(context.doMath(subject.getState(), number));
+			stateCopy = (float) context.doMath(subject.getState(), number);
+			if (!isNotifying) {
+				for (Entry<String, Observer> entry : subject.getLstObservers().entrySet()) {
+					System.out.printf("observer #%s is %.2f\n", entry.getKey(), entry.getValue().stateCopy);
+				}
+			}
 		} else {
 			System.out.println("Cannot do math  :(");
 		}

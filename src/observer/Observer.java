@@ -4,10 +4,11 @@ public abstract class Observer {
 
 	protected String operation;
 	protected Float number;
+	protected Float stateCopy;
 
 	protected Subject subject;
 
-	public abstract void update(String operation, float number);
+	public abstract void update(String operation, float number, boolean isNotifying);
 
 	public abstract String getOperation();
 

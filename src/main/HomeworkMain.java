@@ -2,11 +2,7 @@ package main;
 
 import java.util.Scanner;
 
-import math.MathOperation;
-import math.OperationAdd;
-import math.OperationDivide;
-import math.OperationMultiply;
-import math.OperationSubstract;
+import observer.ObserverA;
 import observer.Subject;
 
 public class HomeworkMain {
@@ -17,6 +13,8 @@ public class HomeworkMain {
 	private static Scanner scanner;
 
 	public static void main(String[] args) {
+		boolean firstStart = true;
+		int observerCounter = 0;
 		scanner = new Scanner(System.in);
 		subjectA = new Subject();
 		subjectA.setState(10);
@@ -24,25 +22,57 @@ public class HomeworkMain {
 		subjectB = new Subject();
 		subjectB.setState(5);
 
+		command = "";
+
 		while (true) {
-			System.out.print("Set_val[A] Set_val[B] [+]AddObserver [-]RemoveObserver e[X]it >");
-			command = scanner.nextLine();
+			if (firstStart) {
+				System.out.print("Set_val[A] Set_val[B] [+]AddObserver [-]RemoveObserver e[X]it >");
+				firstStart = false;
+			}
+
 			if (command.equals("+")) {
-				System.out.print("\nSet New Observer (A|B)(+|-|*|/) <num>):");
+				System.out.print("Set New Observer (A|B)(+|-|*|/) <num>):");
+				String operation = scanner.nextLine();
+				if (operation.startsWith("a") || operation.startsWith("A")) {
+					new ObserverA(subjectA, operation.substring(1,2), Float.parseFloat(operation.substring(2, operation.length())),
+							observerCounter);
+					observerCounter++;
+				} else {
+					new ObserverA(subjectB, operation.substring(1,2),
+							Float.parseFloat(operation.substring(2, operation.length())),
+							observerCounter);
+					observerCounter++;
+				}
+				command = "";
+				System.out.print("Set_val[A] Set_val[B] [+]AddObserver [-]RemoveObserver e[X]it >");
 			} else if (command.equals("-")) {
-				System.out.print("\nSet New Observer (A|B)(+|-|*|/) <num>):");
-			} else if (command.equals("A")) {
+				System.out.print("Remove observer (#)");
+				int observerPosition = scanner.nextInt();
+				if (subjectA.getLstObservers().containsKey(String.valueOf(observerPosition))) {
+					subjectA.detachObserver(String.valueOf(observerPosition));
+				} else {
+					subjectB.detachObserver(String.valueOf(observerPosition));
+				}
+				command = "";
+				System.out.print("Set_val[A] Set_val[B] [+]AddObserver [-]RemoveObserver e[X]it >");
+			} else if (command.equalsIgnoreCase("A")) {
 				Double newValue = null;
 				System.out.print("Value = ");
 				newValue = scanner.nextDouble();
 				subjectA.setState(newValue);
-			} else if (command.equals("B")) {
+				command = "";
+				System.out.print("Set_val[A] Set_val[B] [+]AddObserver [-]RemoveObserver e[X]it >");
+			} else if (command.equalsIgnoreCase("B")) {
 				Double newValueB = null;
 				System.out.print("Value = ");
 				newValueB = scanner.nextDouble();
 				subjectB.setState(newValueB);
+				command = "";
+				System.out.print("Set_val[A] Set_val[B] [+]AddObserver [-]RemoveObserver e[X]it >");
 			} else if (command.equals("X")) {
 				System.exit(0);
+			} else {
+				command = scanner.nextLine();
 			}
 		}
 	}

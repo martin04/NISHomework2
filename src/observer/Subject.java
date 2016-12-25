@@ -1,10 +1,11 @@
 package observer;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class Subject {
 
-	private ArrayList<Observer> lstObservers = new ArrayList<Observer>();
+	private HashMap<String, Observer> lstObservers = new HashMap<String, Observer>();
 	private double state;
 
 	public double getState() {
@@ -16,13 +17,34 @@ public class Subject {
 		notifyAllObservers();
 	}
 
-	public void attach(Observer observer) {
-		lstObservers.add(observer);
+	public void attach(String observerCounter, Observer observer) {
+		lstObservers.put(observerCounter, observer);
+	}
+
+	public void detachObserver(String position) {
+		lstObservers.remove(position);
+		printMapStatus();
 	}
 
 	public void notifyAllObservers() {
-		for (Observer observer : lstObservers) {
-			observer.update(observer.getOperation(), observer.getNumber());
+		for (Entry<String, Observer> entry : lstObservers.entrySet()) {
+			entry.getValue().update(entry.getValue().getOperation(), entry.getValue().getNumber(), true);
+		}
+
+		printMapStatus();
+	}
+
+	public HashMap<String, Observer> getLstObservers() {
+		return lstObservers;
+	}
+
+	public void setLstObservers(HashMap<String, Observer> lstObservers) {
+		this.lstObservers = lstObservers;
+	}
+
+	private void printMapStatus() {
+		for (Entry<String, Observer> entry : lstObservers.entrySet()) {
+			System.out.printf("observer #%s is %.2f\n", entry.getKey(), entry.getValue().stateCopy);
 		}
 	}
 
