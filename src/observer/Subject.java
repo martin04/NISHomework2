@@ -5,13 +5,13 @@ import java.util.ArrayList;
 public class Subject {
 
 	private ArrayList<Observer> lstObservers = new ArrayList<Observer>();
-	private int state;
+	private double state;
 
-	public int getState() {
+	public double getState() {
 		return state;
 	}
 
-	public void setState(int state) {
+	public void setState(double state) {
 		this.state = state;
 		notifyAllObservers();
 	}
@@ -22,7 +22,7 @@ public class Subject {
 
 	public void notifyAllObservers() {
 		for (Observer observer : lstObservers) {
-			observer.update();
+			observer.update(observer.getOperation(), observer.getNumber());
 		}
 	}
 
